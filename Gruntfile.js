@@ -22,6 +22,12 @@ module.exports = function(grunt) {
             options: {
                 livereload: true
             },
+            jst: {
+                files: [
+                    'app/templates/**/*.ejs'
+                ],
+                tasks: ['jst']
+            },
             js : {
                 files: [
                     'app/assets/js/{,*/}*.js',
@@ -35,7 +41,7 @@ module.exports = function(grunt) {
                 files: [
                     "less/*.less",
                 ],
-                tasks: ["less", "cssmin"]
+                tasks: ["less", "cssmin", "jst"]
             },
             livereload: {
                 options: {
@@ -191,6 +197,14 @@ module.exports = function(grunt) {
             }
         },
 
+        jst: {
+            compile: {
+                files: {
+                    'app/assets/js/templates.js': ['app/assets/js/templates/{,*/}*.ejs']
+                }
+            }
+        },
+
     });
 
     grunt.registerTask("server", function (target) {
@@ -202,6 +216,7 @@ module.exports = function(grunt) {
             'bowercopy',
             'less',
             'cssmin',
+            'jst',
             "connect:livereload",
             "watch"
         ]);
@@ -219,7 +234,8 @@ module.exports = function(grunt) {
         // "newer:tinypng",
         // "regex-replace",
         // "uglify",
-        "cssmin"
+        "cssmin",
+        'jst',
     ]);
 
 };
