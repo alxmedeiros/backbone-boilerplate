@@ -1,0 +1,1 @@
+User this folder to put your custom fonts. Currenttly only bootstrap's fonts are beging copy to here.
