@@ -1,0 +1,24 @@
+{
+  "name": "backbone-boilerplate",
+  "version": "0.0.0",
+  "authors": [
+    "Alexandre Medeiros <alxmedeiros@gmail.com>"
+  ],
+  "description": "A boilerplate for backbone apps",
+  "ignore": [
+    "**/.*",
+    "test",
+    "tests"
+  ],
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.1.3",
+    "backbone-amd": "~1.0.0",
+    "underscore-amd": "~1.5.1",
+    "modernizr": "~2.6.2",
+    "momentjs": "~2.5.1",
+    "requirejs": "~2.1.8",
+    "requirejs-plugins": "~1.0.2",
+    "bootstrap": "~3.2.0"
+  }
+}
