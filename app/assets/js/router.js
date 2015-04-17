@@ -1,7 +1,8 @@
 /* global define */
 define([
-    'config'
-], function (Config) {
+    'config',
+    'views/InitView'
+], function (Config, InitView) {
 
 	"use strict";
 
@@ -21,6 +22,8 @@ define([
 
 		app_router.on('route:initAction', function(actions){
 			console.log('Init Route');
+			var view = new InitView();
+			view.render();
         });
 
         app_router.on('route:defaultAction', function(actions){

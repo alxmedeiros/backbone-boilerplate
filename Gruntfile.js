@@ -86,6 +86,35 @@ module.exports = function(grunt) {
                         return middlewares;
                     }
                 }
+            },
+            build: {
+                options: {
+                    // open: true,
+                    base: "build/",
+                    livereload: false,
+                    middleware: function (connect, options) {
+                        var middlewares = [];
+
+                        // RewriteRules support
+                        // middlewares.push(rewriteRulesSnippet);
+
+                        if (!Array.isArray(options.base)) {
+                            options.base = [options.base];
+                        }
+
+                        var directory = options.directory || options.base[options.base.length - 1];
+                        options.base.forEach(function (base) {
+                            // Serve static files.
+                            middlewares.push(connect.static(base));
+                        });
+
+                        // Make directory browse-able.
+                        middlewares.push(connect.directory(directory));
+                        // middlewares.push(proxySnippet);
+
+                        return middlewares;
+                    }
+                }
             }
         },
 
@@ -164,7 +193,7 @@ module.exports = function(grunt) {
                 options: {
                     mainConfigFile : "app/assets/js/main.js",
                     baseUrl : "app/assets/js",
-                    dir: "build/app/assets/js",
+                    dir: "build/assets/js",
                     removeCombined: true,
                     findNestedDependencies: true,
                     wrap: true,
@@ -175,6 +204,9 @@ module.exports = function(grunt) {
                     generateSourceMaps: false,
                     preserveLicenseComments: false,
                     useStrict: true,
+                    paths: {
+                        jquery: "empty:"
+                    },
                     modules : [
                         {
                             name: 'main',
@@ -198,6 +230,9 @@ module.exports = function(grunt) {
         },
 
         jst: {
+            options: {
+                amd: true
+            },
             compile: {
                 files: {
                     'app/assets/js/templates.js': ['app/assets/js/templates/{,*/}*.ejs']
@@ -205,11 +240,60 @@ module.exports = function(grunt) {
             }
         },
 
+        copy: {
+            site: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: 'app/',
+                    dest: 'build/',
+                    src: [
+                        '*.{ico,png}',
+                        '{,*/}*.html',
+                    ]
+                },{
+                    expand: true,
+                    dot: true,
+                    cwd: 'app/assets/css/',
+                    dest: 'build/assets/css/',
+                    src: ['*.css']
+                },{
+                //     expand: true,
+                //     dot: true,
+                //     cwd: '<%= eusa.site %>js/',
+                //     dest: '<%= eusa.build %>'+conf.version+'/js/',
+                //     src: [
+                //         'libs.js',
+                //         'main.js',
+                //         'config.js',
+                //         'common.js',
+                //         'subdomain.js',
+                //         'landing.js',
+                //         'convite.js',
+                //         'md5.js',
+                //         'detector.js'
+                //     ]
+                // },{
+                    expand: true,
+                    dot: true,
+                    cwd: 'app/assets/img/',
+                    dest: 'build/assets/img/',
+                    src: ['**']
+                },{
+                    expand: true,
+                    dot: true,
+                    cwd: 'app/assets/fonts/',
+                    dest: 'build/assets/fonts/',
+                    src: ['**']
+                }]
+            }
+        },
+
     });
 
     grunt.registerTask("server", function (target) {
         if (target === "build") {
-            return grunt.task.run(["configureRewriteRules", "configureProxies", "connect:build:keepalive"]);
+            return grunt.task.run(["connect:build:keepalive"]);
         }
 
         grunt.task.run([
@@ -228,7 +312,7 @@ module.exports = function(grunt) {
         "less",
         'requirejs',
         // "concat",
-        // "copy",
+        "copy",
         // "replace",
         // "usemin",
         // "newer:tinypng",
